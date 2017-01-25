@@ -1,0 +1,13 @@
+# Executable files
+*.out
+*.exe
+*.app
+
+# Linux System
+*~
+
+# macOS
+.DS_Store
+
+# Misc.
+*.pdf
