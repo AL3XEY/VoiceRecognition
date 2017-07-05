@@ -2,9 +2,10 @@ close all;
 clear all;
 clc;
 
-pkg load signal;
-pkg load ltfat;
-
+if isOctave
+    pkg load signal;
+    pkg load ltfat;
+end
 [signal,fe]= audioread('sample.wav') ;
 % soundsc(signal/max(signal),fe) ;
 
@@ -25,14 +26,15 @@ ylabel('s(t)');
 sampleSizems = 0.025; %in seconds
 %sampleSize = sampleSizems/te
 %newSize = round(N/sampleSize)
-newSize = sampleSizems*fe
+newSize = floor(sampleSizems*fe) %TODO
 sampleSize = fe/newSize
 newSignal = cell(1,newSize);
 newSignalDFT = cell(1,newSize);
 for i = 1:newSize
     newSignal{i} = signal((i-1)*sampleSize+1:i*sampleSize);
     %%%%% Step 2 %%%%%
-    newSignalDFT{i} = dft(newSignal{i});
+    %newSignalDFT{i} = dft(newSignal{i});
+    newSignalDFT{i} = fft(newSignal{i});
     %melScale{i} = 1127.*log(1+newSignalDFT./700);
     per{i} = periodogram(newSignalDFT{i});
 end
@@ -49,9 +51,9 @@ space = (higherFreq-lowerFreq)/26;
 spaceMels = (higherMel-lowerMel)/26;
 listMels = [lowerMel:spaceMels:higherMel];
 listFreq = [lowerFreq:space:higherFreq];
-listFreq2 = 700.*(exp(listMels./1125)-1);
+listFreq2 = 700.*(exp(listMels./1127)-1);
 
-listMels - 1125.*log(1+listFreq./700);%
+listMels - 1127.*log(1+listFreq./700);%
 listFreq - listFreq2;%
 
 ff = floor((nFilters+1).*listFreq2./space); %TODO right space ?
@@ -88,5 +90,4 @@ plot([1:max(ff)],filterBank{2},[1:max(ff)],filterBank{3},[1:max(ff)],filterBank{
 
 
 %%%%% Step 7 %%%%%
-
 

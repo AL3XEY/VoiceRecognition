@@ -2,18 +2,21 @@ close all;
 clear all;
 clc;
 
-pkg load signal;
+if isOctave
+    pkg load signal;
+end
 
 %hauteur
-%fréquences
-%forme des ondes (décomp Fourrier? Ondelettes?)
+%frequences
+%forme des ondes (decomp Fourrier? Ondelettes?)
 
 %STFT (Short-Time Fourrier Transform)
 %MFCC (Mel-Frequency Cepstral Coefficients)
 %DTW (Dynamic Time Warping)
 %DWT (Discrete Wavelet Transform)
 
-[signal,fe]= audioread('../res/coucou.wav') ;
+[signal,fe]= audioread('sample.wav') ;
+signal = signal(:,1);
 % soundsc(signal/max(signal),fe) ;
 
 N=length(signal);
@@ -69,7 +72,7 @@ ylabel('|H(f)|');
 
 %%%%% Spectrogram %%%%%
 
-[ss ff tt] = specgram(signal);
+[ss ff tt] = spectrogram(signal);
 step=ceil(20*fe/1000);
 window=ceil(100*fe/1000);
 figure;
